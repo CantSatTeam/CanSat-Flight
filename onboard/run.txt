@@ -1,0 +1,5 @@
+enable i2c on pi: raspi-config -> interface options -> i2c
+
+sudo pip3 install adafruit-blinka
+sudo pip3 install adafruit-circuitpython-sht4x
+pip install ebyte-lora-e22-circuitpython
