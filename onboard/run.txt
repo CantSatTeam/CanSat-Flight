@@ -1,0 +1,4 @@
+enable i2c on pi: raspi-config -> interface options -> i2c
+
+pip install ebyte-lora-e22-circuitpython
+pip install rasterio pyproj opencv-python numpy pyserial pynmea2 pillow
