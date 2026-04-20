@@ -1,6 +1,4 @@
 enable i2c on pi: raspi-config -> interface options -> i2c
 
-pip install adafruit-blinka
-pip install adafruit-circuitpython-sht4x
 pip install ebyte-lora-e22-circuitpython
-pip install pyserial pynmea2
+pip install rasterio pyproj opencv-python numpy pyserial pynmea2 pillow
