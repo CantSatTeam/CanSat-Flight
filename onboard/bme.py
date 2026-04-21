@@ -15,14 +15,24 @@ BME_SCL = 3 # GPIO3
 
 port = 1
 address = 0x76 # Adafruit BME280 is 0x77, but we have 0x76
-bus = smbus2.SMBus(port)
+bus = None
 
-bme280.load_calibration_params(bus,address)
+def init_bme():
+    global port, address, bus
+    bus = smbus2.SMBus(port)
+    bme280.load_calibration_params(bus,address)
+
+def run_bme():
+    global port, address, bus
+    bme280_data = bme280.sample(bus,address)
+    return bme280_data
 
 ### Main Loop ###
 
+init_bme()
+
 while True:
-    bme280_data = bme280.sample(bus,address)
+    bme280_data = run_bme()
     humidity = bme280_data.humidity
     pressure = bme280_data.pressure
     ambient_temperature = bme280_data.temperature

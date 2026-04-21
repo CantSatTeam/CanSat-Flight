@@ -9,11 +9,22 @@ import os
 
 ### Camera Initialization ###
 
-home_dir = os.environ['HOME'] #set the location of your home directory
-cam = Camera()
+home_dir = None
+cam = None
+
+def init_camera():
+    global home_dir, cam
+    home_dir = os.environ['HOME'] # set the location of your home directory
+    cam = Camera()
+
+def run_camera():
+    global cam
+    try:
+        cam.take_photo(f"{home_dir}/CanSat-Flight/onboard/pics/new_image.jpg")
+    except:
+        pass
 
 ### Main Loop ###
 
-cam.start_preview()
-cam.take_photo(f"{home_dir}/Desktop/new_image.jpg") #save the image to your desktop
-cam.stop_preview()
+init_camera()
+run_camera()
