@@ -10,7 +10,6 @@ from pathlib import Path
 
 import numpy as np
 
-from gps_reader import get_gps_fix
 from geo_crop import localize_and_crop
 
 
