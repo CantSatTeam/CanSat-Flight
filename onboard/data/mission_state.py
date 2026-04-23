@@ -1,4 +1,4 @@
-from packets import *
+from data.packets import *
 import time
 import threading
 from typing import Optional

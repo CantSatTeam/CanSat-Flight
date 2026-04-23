@@ -25,6 +25,8 @@ def format_packet_csv(frame: TelemetryFrame) -> str:
     """
     Compact CSV:
     seq,monotonic,temp_x10,press_x10,hum_x10,gps_valid,lat_1e5,lon_1e5,alt_dm,gps_time,bme_ok,gps_ok,radio_ok
+    
+    multiplies to keep as integers for compactness
     """
     temp_x10 = round(frame.ambient_temp_c * 10)
     press_x10 = round(frame.pressure_hpa * 10)
@@ -33,6 +35,13 @@ def format_packet_csv(frame: TelemetryFrame) -> str:
     lat_1e5 = "" if frame.lat_deg is None else round(frame.lat_deg * 1e5)
     lon_1e5 = "" if frame.lon_deg is None else round(frame.lon_deg * 1e5)
     alt_dm = "" if frame.alt_m is None else round(frame.alt_m * 10)
+    
+    print(f"""
+          [TELEM] Frame {frame.seq}:
+          temp={temp_x10/10}C press={press_x10/10}hPa hum={hum_x10/10}%
+          gps_valid={frame.gps_valid} lat={lat_1e5/1e5 if lat_1e5 != '' else 'N/A'} lon={lon_1e5/1e5 if lon_1e5 != '' else 'N/A'} alt={alt_dm/10 if alt_dm != '' else 'N/A'}m gps_time={frame.gps_time_utc}
+          bme_ok={frame.bme_ok} gps_ok={frame.gps_ok} radio_ok={frame.radio_ok}
+          """)
 
     return (
         f"{frame.seq},"
