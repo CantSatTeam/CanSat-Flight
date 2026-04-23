@@ -435,6 +435,11 @@ def localize_and_crop(
         else:
             final_x_dsm, final_y_dsm = final_x_ortho, final_y_ortho
 
+        print("DSM res:", dsm_ds.res)
+        print("final_crop_m:", final_crop_m)
+        print("crop px:", meters_to_pixels(dsm_ds, final_crop_m, final_crop_m))
+        print("DSM size:", dsm_ds.width, dsm_ds.height)
+        print("final_x_dsm, final_y_dsm:", final_x_dsm, final_y_dsm)
         dsm_crop_meta = crop_dataset_to_geotiff(
             ds=dsm_ds,
             center_x=float(final_x_dsm),

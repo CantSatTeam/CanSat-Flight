@@ -10,9 +10,12 @@ class SharedState:
 
         self.latest_bme: Optional[BMEFrame] = None
         self.latest_gps: Optional[GPSFrame] = None
-        self.last_image_path: Optional[str] = None
+        self.last_image_path: Optional[str] = "/home/couldntsat/CanSat-MHE/terrainmesh/demo_data/RGB.png" #TEMP
         self.last_crop_path: Optional[str] = None
         self.last_crop_meta: Optional[dict[str, Any]] = None
+        self.last_sparse_depth_path: Optional[str] = "/home/couldntsat/CanSat-MHE/terrainmesh/demo_data/SparseDepth.png" #TEMP
+        self.last_inference_output_path: Optional[str] = None
+        self.last_inference_meta: Optional[dict[str, Any]] = None
 
         self.health = {
             "bme_ok": False,
@@ -26,6 +29,9 @@ class SharedState:
             "last_radio_s": 0.0,
             "last_camera_s": 0.0,
             "last_geocrop_s": 0.0,
+            "inference_ok": False,
+            "last_inference_s": 0.0,
+            "inference_running": False,
         }
 
     def set_bme(self, frame: BMEFrame):
@@ -56,6 +62,25 @@ class SharedState:
     def set_health_flag(self, key: str, value):
         with self.lock:
             self.health[key] = value
+            
+    def set_sparse_depth_path(self, path: str):
+        with self.lock:
+            self.last_sparse_depth_path = path
+
+    def get_sparse_depth_path(self) -> Optional[str]:
+        with self.lock:
+            return self.last_sparse_depth_path
+        
+    def set_inference_result(self, path: str, meta: Optional[dict[str, Any]] = None):
+        with self.lock:
+            self.last_inference_output_path = path
+            self.last_inference_meta = dict(meta) if meta is not None else None
+            self.health["inference_ok"] = True
+            self.health["last_inference_s"] = time.monotonic()
+
+    def get_inference_result(self):
+        with self.lock:
+            return self.last_inference_output_path, self.last_inference_meta
 
     def snapshot(self):
         with self.lock:

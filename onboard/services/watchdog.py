@@ -19,5 +19,9 @@ def watchdog_task(stop_event: threading.Event, state: SharedState):
         if health["last_radio_s"] and (now - health["last_radio_s"] > 5.0):
             print("[SUPERVISOR] Radio stale")
             state.set_health_flag("radio_ok", False)
+            
+        # if health["inference_running"] and health["last_inference_s"]:
+        #     # optional: only warn if you expect a cadence
+        #     pass
 
         stop_event.wait(1.0)
