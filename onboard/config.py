@@ -1,4 +1,4 @@
-LOG_PATH = "onboard/logs/primary_log.txt"
+LOG_PATH = "logs/primary_log.txt"
 
 # Sensor / service rates
 TELEMETRY_HZ = 1.0
@@ -29,3 +29,24 @@ GPS_RETRY_S = 2.0
 # Camera
 CAMERA_INTERVAL = 5.0
 CAMERA_DIR = "onboard/pics"
+
+# Geocrop
+GEOCROP_ENABLED = False
+GEOCROP_USE_ORB = False
+GEOCROP_REQUIRE_ORB = False
+
+GEOCROP_ORTHO_PATH = "/home/pi/maps/orthophoto.tif"
+GEOCROP_DSM_PATH = "/home/pi/maps/dsm.tif"
+GEOCROP_OUTPUT_DIR = "/home/pi/CanSat-Flight/crops"
+
+GEOCROP_MAX_GPS_AGE_S = 15.0
+GEOCROP_COARSE_SEARCH_M = 80.0
+GEOCROP_FINAL_CROP_M = 30.0
+GEOCROP_MAX_REFINEMENT_SHIFT_M = 35.0
+
+GEOCROP_ORB_RATIO_THRESH = 0.75
+GEOCROP_ORB_MIN_GOOD = 30
+GEOCROP_ORB_MIN_INLIERS = 15
+GEOCROP_ORB_NFEATURES = 1500
+GEOCROP_CAMERA_MAX_DIM = 640
+GEOCROP_MAPCHIP_MAX_DIM = 1024

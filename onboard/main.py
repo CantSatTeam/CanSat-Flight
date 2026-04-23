@@ -1,16 +1,17 @@
-# app/main.py
 import queue
 import threading
 import time
 
 from config import QUEUE_SIZE
-import drivers.bme280 as bme280
+import drivers_test.bme280 as bme280
 from data.mission_state import SharedState
 from services.camera import camera_task
+from services.geocrop import geocrop_task
 from services.sampler import bme_task, gps_task
 from services.telemetry import telemetry_task, radio_task
 from services.logger import logger_task
 from services.watchdog import watchdog_task
+
 
 def main():
     bme280.init_bme()
@@ -29,6 +30,7 @@ def main():
         threading.Thread(target=logger_task, args=(stop_event, log_queue), daemon=True),
         threading.Thread(target=watchdog_task, args=(stop_event, state), daemon=True),
         threading.Thread(target=camera_task, args=(stop_event, state), daemon=True),
+        threading.Thread(target=geocrop_task, args=(stop_event, state), daemon=True),
     ]
 
     for t in threads:
@@ -41,6 +43,7 @@ def main():
         stop_event.set()
         for t in threads:
             t.join(timeout=1.0)
+
 
 if __name__ == "__main__":
     main()

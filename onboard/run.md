@@ -22,4 +22,4 @@ camera:
 1. run `sudo apt install python3-picamzero`
 
 for geo crop:
-1. pip install rasterio pyproj opencv-python numpy pyserial pynmea2 pillow
+<!-- 1. pip install rasterio pyproj opencv-python numpy pyserial pynmea2 pillow -->

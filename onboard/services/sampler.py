@@ -6,6 +6,7 @@ from config import *
 import drivers.bme280 as bme280
 import drivers.gps as gps
 
+
 def bme_task(stop_event: threading.Event, state: SharedState):
     period = 1.0 / BME_HZ
     next_t = time.monotonic()
@@ -28,23 +29,15 @@ def bme_task(stop_event: threading.Event, state: SharedState):
         delay = max(0.0, next_t - time.monotonic())
         stop_event.wait(delay)
 
+
 def gps_task(stop_event: threading.Event, state: SharedState):
     gps_handle = gps.init_gps()
 
     try:
         while not stop_event.is_set():
             try:
-                result = gps.try_read_gps(gps_handle)
-                if result is not None:
-                    lat, lon, alt_m, fix_ok, utc_time_str = result
-                    frame = GPSFrame(
-                        monotonic_s=time.monotonic(),
-                        lat_deg=lat,
-                        lon_deg=lon,
-                        alt_m=alt_m,
-                        fix_ok=fix_ok,
-                        utc_time_str=utc_time_str,
-                    )
+                frame = gps.try_read_gps(gps_handle)
+                if frame is not None:
                     state.set_gps(frame)
             except Exception as e:
                 state.set_health_flag("gps_ok", False)

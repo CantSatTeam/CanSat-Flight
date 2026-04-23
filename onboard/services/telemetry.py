@@ -7,10 +7,6 @@ from data.packets import TelemetryFrame
 
 
 def put_latest(q: queue.Queue, item) -> None:
-    """
-    Non-blocking queue write.
-    If full, drop oldest and keep newest.
-    """
     try:
         q.put_nowait(item)
     except queue.Full:
@@ -22,12 +18,6 @@ def put_latest(q: queue.Queue, item) -> None:
 
 
 def format_packet_csv(frame: TelemetryFrame) -> str:
-    """
-    Compact CSV:
-    seq,monotonic,temp_x10,press_x10,hum_x10,gps_valid,lat_1e5,lon_1e5,alt_dm,gps_time,bme_ok,gps_ok,radio_ok
-    
-    multiplies to keep as integers for compactness
-    """
     temp_x10 = round(frame.ambient_temp_c * 10)
     press_x10 = round(frame.pressure_hpa * 10)
     hum_x10 = round(frame.humidity_pct * 10)
@@ -35,7 +25,7 @@ def format_packet_csv(frame: TelemetryFrame) -> str:
     lat_1e5 = "" if frame.lat_deg is None else round(frame.lat_deg * 1e5)
     lon_1e5 = "" if frame.lon_deg is None else round(frame.lon_deg * 1e5)
     alt_dm = "" if frame.alt_m is None else round(frame.alt_m * 10)
-    
+
     print(f"""
           [TELEM] Frame {frame.seq}:
           temp={temp_x10/10}C press={press_x10/10}hPa hum={hum_x10/10}%
@@ -60,7 +50,7 @@ def telemetry_task(stop_event, state, radio_queue: queue.Queue, log_queue: queue
     next_t = time.monotonic()
 
     while not stop_event.is_set():
-        bme, gps, image_path, health = state.snapshot()
+        bme, gps, _image_path, _crop_path, _crop_meta, health = state.snapshot()
 
         if bme is not None:
             gps_valid = 1 if (gps is not None and gps.fix_ok) else 0
@@ -97,10 +87,6 @@ def telemetry_task(stop_event, state, radio_queue: queue.Queue, log_queue: queue
 
 
 def radio_task(stop_event, state, radio_queue: queue.Queue):
-    """
-    Dedicated TX worker.
-    Keeps retrying if the UART/radio fails.
-    """
     if not LORA_ENABLED:
         print("[RADIO] Disabled in config")
         state.set_health_flag("radio_ok", False)
