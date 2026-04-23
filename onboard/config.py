@@ -28,16 +28,16 @@ GPS_RETRY_S = 2.0
 
 # Camera
 CAMERA_INTERVAL = 5.0
-CAMERA_DIR = "onboard/pics"
+CAMERA_DIR = "onboard/pics" #/home/couldntsat/CanSat-Flight/
 
 # Geocrop
-GEOCROP_ENABLED = False
+GEOCROP_ENABLED = True
 GEOCROP_USE_ORB = False
 GEOCROP_REQUIRE_ORB = False
 
-GEOCROP_ORTHO_PATH = "/home/pi/maps/orthophoto.tif"
-GEOCROP_DSM_PATH = "/home/pi/maps/dsm.tif"
-GEOCROP_OUTPUT_DIR = "/home/pi/CanSat-Flight/crops"
+GEOCROP_ORTHO_PATH = "/home/couldntsat/CanSat-Flight/maps/orthophoto.tif"
+GEOCROP_DSM_PATH = "/home/couldntsat/CanSat-Flight/maps/dsm.tif"
+GEOCROP_OUTPUT_DIR = "/home/couldntsat/CanSat-Flight/crops"
 
 GEOCROP_MAX_GPS_AGE_S = 15.0
 GEOCROP_COARSE_SEARCH_M = 80.0
