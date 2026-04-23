@@ -3,8 +3,8 @@ import threading
 from data.mission_state import SharedState
 from data.packets import *
 from config import *
-import drivers_test.bme280 as bme280
-import drivers_test.gps as gps
+import drivers.bme280 as bme280
+import drivers.gps as gps
 
 def bme_task(stop_event: threading.Event, state: SharedState):
     period = 1.0 / BME_HZ

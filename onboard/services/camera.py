@@ -1,7 +1,7 @@
 import threading
 import time
 
-import drivers_test.camera as camera
+import drivers.camera as camera
 from config import *
 
 def camera_task(stop_event, state):

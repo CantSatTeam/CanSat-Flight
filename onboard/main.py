@@ -4,7 +4,7 @@ import threading
 import time
 
 from config import QUEUE_SIZE
-import drivers_test.bme280 as bme280
+import drivers.bme280 as bme280
 from data.mission_state import SharedState
 from services.camera import camera_task
 from services.sampler import bme_task, gps_task
