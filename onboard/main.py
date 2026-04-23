@@ -4,8 +4,9 @@ import threading
 import time
 
 from config import QUEUE_SIZE
-import drivers.bme280 as bme280
+import drivers_test.bme280 as bme280
 from data.mission_state import SharedState
+from services.camera import camera_task
 from services.sampler import bme_task, gps_task
 from services.telemetry import telemetry_task, radio_task
 from services.logger import logger_task
@@ -27,6 +28,7 @@ def main():
         threading.Thread(target=radio_task, args=(stop_event, state, radio_queue), daemon=True),
         threading.Thread(target=logger_task, args=(stop_event, log_queue), daemon=True),
         threading.Thread(target=watchdog_task, args=(stop_event, state), daemon=True),
+        threading.Thread(target=camera_task, args=(stop_event, state), daemon=True),
     ]
 
     for t in threads:

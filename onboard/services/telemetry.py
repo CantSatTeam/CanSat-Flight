@@ -2,7 +2,7 @@ import queue
 import time
 
 from config import *
-import drivers.lora as lora
+import drivers_test.lora as lora
 from data.packets import TelemetryFrame
 
 
@@ -60,7 +60,7 @@ def telemetry_task(stop_event, state, radio_queue: queue.Queue, log_queue: queue
     next_t = time.monotonic()
 
     while not stop_event.is_set():
-        bme, gps, health = state.snapshot()
+        bme, gps, image_path, health = state.snapshot()
 
         if bme is not None:
             gps_valid = 1 if (gps is not None and gps.fix_ok) else 0

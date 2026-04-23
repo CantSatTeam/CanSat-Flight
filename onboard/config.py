@@ -19,3 +19,14 @@ LORA_RETRY_S = 2.0
 
 # Keep payloads small for radio reliability
 LORA_MAX_PAYLOAD_BYTES = 240
+
+# GPS UART
+GPS_UART_PORT = "/dev/ttyAMA0"   # must be different from LORA_UART_PORT
+GPS_BAUDRATE = 9600
+GPS_TIMEOUT_S = 0.2
+GPS_RETRY_S = 2.0
+
+# Camera
+CAMERA_ENABLED = True
+CAMERA_INTERVAL = 5.0
+CAMERA_DIR = "onboard/pics"

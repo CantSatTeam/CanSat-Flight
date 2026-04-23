@@ -10,7 +10,7 @@ def watchdog_task(stop_event: threading.Event, state: SharedState):
 
     """
     while not stop_event.is_set():
-        _, _, health = state.snapshot()
+        _, _, _, health = state.snapshot()
         now = time.monotonic()
 
         if health["last_bme_s"] and (now - health["last_bme_s"] > 3.0):
