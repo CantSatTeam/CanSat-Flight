@@ -27,6 +27,5 @@ GPS_TIMEOUT_S = 0.2
 GPS_RETRY_S = 2.0
 
 # Camera
-CAMERA_ENABLED = True
 CAMERA_INTERVAL = 5.0
 CAMERA_DIR = "onboard/pics"
