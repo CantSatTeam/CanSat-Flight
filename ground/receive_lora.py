@@ -1,70 +1,46 @@
-#!/usr/bin/env python3
-"""Simple LoRa receiver for E22-T series using pyserial.
+# MicroPython receiver for Raspberry Pi Pico (RP2040)
+# Connect E22-T TX -> Pico RX (GP1), E22-T RX -> Pico TX (GP0), common GND
+# Put module in transparent Mode 0 (M1=0 M0=0) to receive raw payloads.
 
-Usage:
-  python3 ground/receive_lora.py --port /dev/serial0 --baud 9600
-
-Reads bytes from the serial port and prints timestamped messages.
-"""
-import argparse
-import serial
+import machine
 import time
-import sys
 
 
-def open_serial(port: str, baud: int, timeout: float = 1.0):
-    return serial.Serial(port, baudrate=baud, timeout=timeout)
-
-
-def format_bytes(b: bytes) -> str:
+def format_bytes(b):
+    # b is a bytes-like object
     try:
-        text = b.decode('utf-8', errors='replace')
+        text = b.decode('utf-8')
     except Exception:
-        text = repr(b)
-    hexs = ' '.join(f'{x:02X}' for x in b)
-    return f"text={text!r} | hex={hexs}"
-
-
-def run(port: str, baud: int, logfile: str | None):
-    ser = open_serial(port, baud)
-    print(f'Listening on {port} @ {baud}bps. Ctrl-C to exit.')
-    out = None
-    if logfile:
-        out = open(logfile, 'a', buffering=1)
-        print(f'Logging to {logfile}')
-
-    try:
-        while True:
-            # read any available bytes; adjust behavior if you prefer line-based reads
-            data = ser.read(ser.in_waiting or 1)
-            if not data:
-                time.sleep(0.02)
-                continue
-            ts = time.strftime('%Y-%m-%d %H:%M:%S')
-            entry = f"[{ts}] {format_bytes(data)}"
-            print(entry)
-            if out:
-                out.write(entry + '\n')
-    except KeyboardInterrupt:
-        print('\nExiting.')
-    finally:
-        ser.close()
-        if out:
-            out.close()
+        try:
+            text = b.decode('latin-1')
+        except Exception:
+            text = str(b)
+    hexs = ' '.join('{:02X}'.format(x) for x in b)
+    return "text={} | hex={}".format(repr(text), hexs)
 
 
 def main():
-    p = argparse.ArgumentParser(description='Receive LoRa messages (E22-T) over serial')
-    p.add_argument('--port', '-p', default='/dev/serial0', help='Serial device')
-    p.add_argument('--baud', '-b', type=int, default=9600, help='Serial baud rate (default 9600)')
-    p.add_argument('--log', '-l', help='Append received messages to logfile')
-    args = p.parse_args()
+    # Use UART0 with TX=GP0, RX=GP1 (change pins below if you wired differently)
+    tx_pin = machine.Pin(0)
+    rx_pin = machine.Pin(1)
+    uart = machine.UART(0, baudrate=9600, bits=8, parity=None, stop=1, tx=tx_pin, rx=rx_pin)
 
+    print('Listening on UART0 (TX=GP0 RX=GP1) @ 9600bps. Ctrl-C to stop.')
     try:
-        run(args.port, args.baud, args.log)
-    except serial.SerialException as e:
-        print('Serial error:', e, file=sys.stderr)
-        sys.exit(2)
+        while True:
+            available = uart.any()
+            if available:
+                data = uart.read(available)
+                if not data:
+                    time.sleep_ms(10)
+                    continue
+                ts = time.ticks_ms() / 1000.0
+                entry = '[{:.3f}] {}'.format(ts, format_bytes(data))
+                print(entry)
+            else:
+                time.sleep_ms(20)
+    except KeyboardInterrupt:
+        print('\nStopped by user')
 
 
 if __name__ == '__main__':
