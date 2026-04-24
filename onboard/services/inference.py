@@ -3,7 +3,31 @@ import subprocess
 import time
 from pathlib import Path
 
+from PIL import Image, ImageStat
+
 from config import *
+
+
+def inference_inputs_ok(image_path, sparse_depth_path):
+    try:
+        if not Path(image_path).is_file() or not Path(sparse_depth_path).is_file():
+            return False, "missing_input"
+
+        with Image.open(image_path) as img:
+            stat = ImageStat.Stat(img.convert("L"))
+            if stat.mean[0] < 25:
+                return False, "image_too_dark"
+            if stat.stddev[0] < 6:
+                return False, "image_blank_or_flat"
+
+        with Image.open(sparse_depth_path) as depth:
+            if sum(depth.convert("L").histogram()[1:]) < 10:
+                return False, "depth_empty"
+
+        return True, "ok"
+
+    except Exception as e:
+        return False, f"bad_input:{e}"
 
 
 def inference_task(stop_event, state):
@@ -37,6 +61,16 @@ def inference_task(stop_event, state):
             stop_event.wait(INFERENCE_POLL_S)
             continue
 
+        ok, reason = inference_inputs_ok(image_path, sparse_depth_path)
+        if not ok:
+            state.set_health_flag("inference_ok", False)
+            state.set_health_flag("last_inference_skip_s", time.monotonic())
+            state.set_health_flag("last_inference_skip_reason", reason)
+            print(f"[INFER SKIP] {reason}")
+            last_key = job_key
+            stop_event.wait(0.1)
+            continue
+
         state.set_health_flag("inference_running", True)
 
         ts = int(time.time())
@@ -66,7 +100,10 @@ def inference_task(stop_event, state):
             if meta_path.exists():
                 meta = json.loads(meta_path.read_text(encoding="utf-8"))
             else:
-                meta = {"stdout": result.stdout[-2000:], "stderr": result.stderr[-2000:]}
+                meta = {
+                    "stdout": result.stdout[-2000:],
+                    "stderr": result.stderr[-2000:],
+                }
 
             state.set_inference_result(str(job_out_dir), meta)
             state.set_health_flag("inference_ok", True)

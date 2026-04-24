@@ -12,7 +12,6 @@ def read_bme():
       humidity = 40.0, 41.0, 42.0, ...
     """
     global _sample_index
-
     if not _started:
         raise RuntimeError("Fake BME280 not initialized")
 

@@ -1,7 +1,4 @@
-import threading
-import time
-
-import drivers.camera as camera
+import drivers_test.camera as camera
 from config import *
 
 def camera_task(stop_event, state):
@@ -10,6 +7,7 @@ def camera_task(stop_event, state):
     try:
         while not stop_event.is_set():
             try:
+                print("[CAMERA] taking photo...")
                 path = camera.take_photo(handle)
                 if path is not None:
                     state.set_image_path(path)

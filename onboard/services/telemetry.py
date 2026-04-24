@@ -2,7 +2,7 @@ import queue
 import time
 
 from config import *
-import drivers.lora as lora
+import drivers_test.lora as lora
 from data.packets import TelemetryFrame
 
 

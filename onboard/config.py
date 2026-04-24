@@ -27,17 +27,17 @@ GPS_TIMEOUT_S = 0.2
 GPS_RETRY_S = 2.0
 
 # Camera
-CAMERA_INTERVAL = 5.0
-CAMERA_DIR = "onboard/pics" #/home/couldntsat/CanSat-Flight/
+CAMERA_INTERVAL = 1.0
+CAMERA_DIR = "../pics" 
 
 # Geocrop
 GEOCROP_ENABLED = True
 GEOCROP_USE_ORB = False
 GEOCROP_REQUIRE_ORB = False
 
-GEOCROP_ORTHO_PATH = "/home/couldntsat/CanSat-Flight/maps/orthophoto.tif"
-GEOCROP_DSM_PATH = "/home/couldntsat/CanSat-Flight/maps/dsm.tif"
-GEOCROP_OUTPUT_DIR = "/home/couldntsat/CanSat-Flight/crops"
+GEOCROP_ORTHO_PATH = "../maps/orthophoto.tif"
+GEOCROP_DSM_PATH = "../maps/dsm.tif"
+GEOCROP_OUTPUT_DIR = "../crops"
 
 GEOCROP_MAX_GPS_AGE_S = 15.0
 GEOCROP_COARSE_SEARCH_M = 80.0
@@ -54,12 +54,9 @@ GEOCROP_MAPCHIP_MAX_DIM = 1024
 # Inference
 INFERENCE_ENABLED = True
 
-INFERENCE_PY311 = "/home/couldntsat/CanSat-MHE/terrainmesh/env/bin/python"
-INFERENCE_WORKER = "/home/couldntsat/CanSat-MHE/terrainmesh/infer_worker.py"
+INFERENCE_PY311 = "../../terrainmesh/env/bin/python"
+INFERENCE_WORKER = "../../terrainmesh/infer_worker.py"
 
-INFERENCE_OUTPUT_DIR = "/home/couldntsat/CanSat-Flight/data/inference"
+INFERENCE_OUTPUT_DIR = "../data/inference"
 INFERENCE_TIMEOUT_S = 180
 INFERENCE_POLL_S = 0.5
-INFERENCE_RETRY_S = 5.0
-
-INFERENCE_LATEST_ONLY = True

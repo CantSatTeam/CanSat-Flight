@@ -13,7 +13,7 @@ class SharedState:
         self.last_image_path: Optional[str] = "/home/couldntsat/CanSat-MHE/terrainmesh/demo_data/RGB.png" #TEMP
         self.last_crop_path: Optional[str] = None
         self.last_crop_meta: Optional[dict[str, Any]] = None
-        self.last_sparse_depth_path: Optional[str] = "/home/couldntsat/CanSat-MHE/terrainmesh/demo_data/SparseDepth.png" #TEMP
+        self.last_sparse_depth_path: Optional[str] = "/home/alexander/Projects/cansat/CanSat-Flight/pics/image_1777006184.jpg" #"/home/couldntsat/CanSat-MHE/terrainmesh/demo_data/SparseDepth.png" #TEMP
         self.last_inference_output_path: Optional[str] = None
         self.last_inference_meta: Optional[dict[str, Any]] = None
 

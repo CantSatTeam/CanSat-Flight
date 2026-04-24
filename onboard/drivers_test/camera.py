@@ -3,6 +3,8 @@ from pathlib import Path
 from typing import Optional
 import time
 
+from PIL import Image
+
 from config import CAMERA_DIR
 
 
@@ -12,11 +14,10 @@ class CameraHandle:
 
 
 def init_camera() -> CameraHandle:
-    base = Path.home() / "CanSat-Flight"
     image_dir = Path(CAMERA_DIR)
 
     if not image_dir.is_absolute():
-        image_dir = base / image_dir
+        image_dir = Path.cwd() / image_dir
 
     image_dir.mkdir(parents=True, exist_ok=True)
     return CameraHandle(image_dir=image_dir)
@@ -33,7 +34,8 @@ def take_photo(handle: CameraHandle, filename: Optional[str] = None) -> Optional
     path = handle.image_dir / filename
 
     try:
-        path.write_bytes(b"FAKE_JPG_DATA")
+        image = Image.new("RGB", (640, 480), color=(0, 0, 0))
+        image.save(path, format="JPEG")
         return str(path)
     except Exception:
         return None
